@@ -1,0 +1,14 @@
+{
+  "name": "@crunchrr/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

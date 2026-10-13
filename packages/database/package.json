@@ -1,0 +1,24 @@
+{
+  "name": "@crunchrr/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "migrate": "tsx src/migrate.ts",
+    "seed": "tsx src/seed.ts",
+    "seed:dashboard": "tsx src/seed-dashboard.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.0",
+    "pg": "^8.16.0",
+    "@crunchrr/validation": "workspace:*",
+    "dotenv": "^17.2.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.0"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

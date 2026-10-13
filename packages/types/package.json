@@ -1,0 +1,16 @@
+{
+  "name": "@crunchrr/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@crunchrr/validation": "workspace:*"
+  },
+  "devDependencies": {},
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

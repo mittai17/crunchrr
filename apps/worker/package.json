@@ -1,0 +1,22 @@
+{
+  "name": "@crunchrr/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@crunchrr/database": "workspace:*",
+    "@crunchrr/validation": "workspace:*",
+    "bullmq": "^5.58.0",
+    "ioredis": "^5.7.0",
+    "dotenv": "^17.2.0",
+    "drizzle-orm": "^0.45.0",
+    "@crunchrr/utils": "workspace:*"
+  },
+  "devDependencies": {}
+}

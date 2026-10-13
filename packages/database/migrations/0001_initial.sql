@@ -1,0 +1,15 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE IF NOT EXISTS users (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), clerk_id text UNIQUE NOT NULL, profile jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS entities (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,kind text NOT NULL,title text NOT NULL CHECK(length(title) BETWEEN 1 AND 200),description text NOT NULL DEFAULT '',status text NOT NULL DEFAULT 'todo',priority text NOT NULL DEFAULT 'medium',due_at timestamptz,recurrence text NOT NULL DEFAULT 'none',tags jsonb NOT NULL DEFAULT '[]',data jsonb NOT NULL DEFAULT '{}',version integer NOT NULL DEFAULT 1,created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now(),UNIQUE(owner_id,id));
+CREATE INDEX IF NOT EXISTS entities_owner_kind ON entities(owner_id,kind);
+CREATE INDEX IF NOT EXISTS entities_owner_due ON entities(owner_id,due_at);
+ALTER TABLE entities ADD COLUMN IF NOT EXISTS search_vector tsvector GENERATED ALWAYS AS (to_tsvector('english',coalesce(title,'') || ' ' || coalesce(description,'') || ' ' || coalesce(data->>'content','') || ' ' || coalesce(data->>'category',''))) STORED;
+CREATE INDEX IF NOT EXISTS entities_search ON entities USING GIN(search_vector);
+CREATE TABLE IF NOT EXISTS entity_links (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,source_id uuid NOT NULL,target_id uuid NOT NULL,relationship text NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),CHECK(source_id<>target_id),FOREIGN KEY(owner_id,source_id) REFERENCES entities(owner_id,id) ON DELETE CASCADE,FOREIGN KEY(owner_id,target_id) REFERENCES entities(owner_id,id) ON DELETE CASCADE,UNIQUE(owner_id,source_id,target_id,relationship));
+CREATE INDEX IF NOT EXISTS links_target ON entity_links(owner_id,target_id);
+CREATE TABLE IF NOT EXISTS audit_logs (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,action text NOT NULL,entity_id uuid,metadata jsonb NOT NULL DEFAULT '{}',created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS audit_owner_created ON audit_logs(owner_id,created_at);
+CREATE TABLE IF NOT EXISTS notifications (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,entity_id uuid REFERENCES entities(id) ON DELETE CASCADE,title text NOT NULL,read boolean NOT NULL DEFAULT false,dedupe_key text NOT NULL UNIQUE,created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS notifications_owner ON notifications(owner_id,created_at);
+CREATE TABLE IF NOT EXISTS files (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),owner_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,key text NOT NULL UNIQUE,name text NOT NULL,content_type text NOT NULL,size integer NOT NULL CHECK(size>0 AND size<=20971520),created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS files_owner ON files(owner_id);

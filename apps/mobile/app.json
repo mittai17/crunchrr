@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "crunchrr",
+    "slug": "crunchrr",
+    "scheme": "crunchrr",
+    "version": "1.0.0",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.crunchrr.mobile"
+    },
+    "android": {
+      "package": "app.crunchrr.mobile"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

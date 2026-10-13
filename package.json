@@ -1,0 +1,29 @@
+{
+  "name": "crunchrr",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "scripts": {
+    "dev": "turbo dev --filter=@crunchrr/web --filter=@crunchrr/api",
+    "dev:mobile": "pnpm --filter @crunchrr/mobile dev",
+    "build": "turbo build",
+    "typecheck": "turbo typecheck",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db:migrate": "pnpm --filter @crunchrr/database migrate",
+    "db:seed": "pnpm --filter @crunchrr/database seed",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "dev:demo": "node scripts/dev-demo.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^22.18.0",
+    "drizzle-orm": "^0.45.3",
+    "pnpm": "10.28.0",
+    "prettier": "^3.9.9",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.0",
+    "turbo": "^2.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.0"
+  }
+}
